@@ -30,7 +30,7 @@
     min-height: 300px;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* vertically center messages */
+    justify-content: center;
   }
 
   h1 {
@@ -72,7 +72,7 @@
     100% { transform: translateY(-120vh); }
   }
 
-  .confetti, .falling-img {
+  .confetti, .falling-img, .butterfly {
     animation-name: fallDown;
     animation-timing-function: linear;
     animation-iteration-count: infinite;
@@ -84,6 +84,20 @@
   }
 
   .falling-img { width: 60px; height: auto; border-radius: 8px; }
+
+  .butterfly {
+    font-size: 1.5em;
+    animation-name: floatButterfly;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    position: absolute;
+  }
+
+  @keyframes floatButterfly {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); }
+    50% { transform: translateY(-20px) translateX(15px) rotate(20deg); }
+    100% { transform: translateY(0) translateX(0) rotate(0deg); }
+  }
 
   #startBtn {
     position: fixed;
@@ -120,6 +134,16 @@
     box-shadow: 0 0 40px rgba(255, 215, 0, 1);
     transform: translate(-50%, -50%) scale(1.2) rotate(-5deg);
   }
+
+  /* Fireworks */
+  .firework {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
 </style>
 </head>
 <body>
@@ -174,7 +198,40 @@ const funnyTexts = [
   "🌸 Click for Kawaii 🌸"
 ];
 
-setInterval(() => {
+function createFirework(x, y) {
+  const colors = ["#ff0a54","#ff477e","#ff85a1","#fbb1b1","#f9bec7","#fcd5ce"];
+  for(let i=0;i<20;i++){
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+    f.style.left = x + "px";
+    f.style.top = y + "px";
+    document.body.appendChild(f);
+
+    let angle = Math.random() * 2 * Math.PI;
+    let distance = 50 + Math.random()*50;
+    let dx = Math.cos(angle)*distance;
+    let dy = Math.sin(angle)*distance;
+
+    f.animate([
+      { transform: `translate(0px,0px)`, opacity: 1 },
+      { transform: `translate(${dx}px, ${dy}px)`, opacity: 0 }
+    ],{
+      duration: 1000 + Math.random()*500,
+      easing: "ease-out"
+    });
+
+    setTimeout(()=>f.remove(),1500);
+  }
+}
+
+setInterval(()=>{
+  let x = Math.random()*window.innerWidth;
+  let y = Math.random()*window.innerHeight/2; // fireworks top half
+  createFirework(x,y);
+},2000);
+
+setInterval(()=>{
   startBtn.innerText = funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
 }, 3000);
 
@@ -183,7 +240,6 @@ startBtn.addEventListener("click", () => {
   card.style.transform = "scale(1)";
   bgMusic.play();
 
-  // Show messages one by one, stop at last
   let index = 0;
   messages[index].classList.add("active");
   const messageInterval = setInterval(() => {
@@ -192,11 +248,10 @@ startBtn.addEventListener("click", () => {
     if(index < messages.length){
       messages[index].classList.add("active");
     } else {
-      clearInterval(messageInterval); // stop after last message
+      clearInterval(messageInterval);
     }
   }, 4000);
 
-  // Add balloons
   for (let i = 0; i < 20; i++) {
     let balloon = document.createElement("div");
     balloon.className = "floating balloon";
@@ -206,7 +261,6 @@ startBtn.addEventListener("click", () => {
     document.body.appendChild(balloon);
   }
 
-  // Add confetti
   for (let i = 0; i < 25; i++) {
     let conf = document.createElement("div");
     conf.className = "floating confetti";
@@ -218,7 +272,6 @@ startBtn.addEventListener("click", () => {
     document.body.appendChild(conf);
   }
 
-  // Add cats
   for (let i = 0; i < 12; i++) {
     let cat = document.createElement("img");
     cat.src = catImgs[Math.floor(Math.random()*catImgs.length)];
@@ -232,7 +285,6 @@ startBtn.addEventListener("click", () => {
     document.body.appendChild(cat);
   }
 
-  // Add BMW logos
   for (let i = 0; i < 8; i++) {
     let bmw = document.createElement("img");
     bmw.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/320px-BMW.svg.png";
@@ -246,7 +298,17 @@ startBtn.addEventListener("click", () => {
     document.body.appendChild(bmw);
   }
 
-  // Random meows
+  // Butterflies
+  for (let i = 0; i < 12; i++) {
+    let butterfly = document.createElement("div");
+    butterfly.className = "butterfly";
+    butterfly.innerText = "🦋";
+    butterfly.style.left = Math.random() * 100 + "vw";
+    butterfly.style.top = Math.random() * 100 + "vh";
+    butterfly.style.animationDuration = (3 + Math.random()*4) + "s";
+    document.body.appendChild(butterfly);
+  }
+
   setInterval(() => {
     if(Math.random()>0.6){
       meow.currentTime=0;
@@ -258,3 +320,4 @@ startBtn.addEventListener("click", () => {
 
 </body>
 </html>
+
