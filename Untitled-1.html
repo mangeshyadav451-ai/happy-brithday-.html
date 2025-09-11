@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Happy Birthday 🎂</title>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #ff758c, #ff7eb3, #fad0c4);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    text-align: center;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card {
+    background: white;
+    border-radius: 20px;
+    padding: 50px;
+    box-shadow: 0 0 30px rgba(255,0,128,0.5);
+    text-align: center;
+    transform: scale(0);
+    max-width: 600px;
+    z-index: 50;
+    position: relative;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* vertically center messages */
+  }
+
+  h1 {
+    font-size: 3em;
+    color: #ff1493;
+    text-shadow: 2px 2px 12px #ff69b4;
+  }
+
+  .message {
+    font-size: 1.4em;
+    color: #444;
+    margin: 15px 0;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: opacity 0.6s, transform 0.6s;
+  }
+
+  .message.active {
+    opacity: 1;
+    transform: scale(1.1);
+    animation: bounceIn 0.6s ease forwards;
+  }
+
+  @keyframes bounceIn {
+    0% { transform: scale(0.5); }
+    60% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  .floating { position: absolute; pointer-events: none; }
+
+  .balloon {
+    font-size: 2em;
+    animation: floatUp 6s linear infinite;
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(100vh); }
+    100% { transform: translateY(-120vh); }
+  }
+
+  .confetti, .falling-img {
+    animation-name: fallDown;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes fallDown {
+    0% { transform: translateY(-10vh) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+  }
+
+  .falling-img { width: 60px; height: auto; border-radius: 8px; }
+
+  #startBtn {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 18px 40px;
+    font-size: 1.3em;
+    font-weight: bold;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(90deg, #ff00cc, #3333ff, #00ffcc, #ffff33, #ff6600, #ff00cc);
+    background-size: 400%;
+    color: white;
+    cursor: pointer;
+    z-index: 60;
+    box-shadow: 0 0 25px rgba(255,0,150,0.7);
+    animation: rainbowMove 6s linear infinite, bounceBtn 1.5s infinite;
+  }
+
+  @keyframes rainbowMove {
+    0% { background-position: 0%; }
+    100% { background-position: 400%; }
+  }
+
+  @keyframes bounceBtn {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50% { transform: translate(-50%, -55%) scale(1.1); }
+  }
+
+  #startBtn:hover {
+    background: linear-gradient(90deg, #ff1493, #ff8c00, #ffd700);
+    background-size: 300%;
+    box-shadow: 0 0 40px rgba(255, 215, 0, 1);
+    transform: translate(-50%, -50%) scale(1.2) rotate(-5deg);
+  }
+</style>
+</head>
+<body>
+
+<div class="card" id="card">
+  <h1>🎉 Happy Birthday 🎉  🥳HINA🥳 </h1>
+  <div id="messages">
+    <p class="message">today's your Birthday 💖</p>
+    <p class="message">"Today, the world became more beautiful because you were born 🌸" 🥳 🇯🇵</p>
+    <p class="message">🎂 Wishing you endless happiness, always stay happy 🎂</p>
+    <p class="message">✨ You deserve all the smiles today & always ✨</p>
+    <p class="message">😋 Smile big, laugh loud, and eat lots of cake 🎂</p>
+    <p class="message">🐱 May your day be as cute as a cat’s meow 🐱</p>
+    <p class="message">🎶 Dance, laugh, eat cake, repeat 🎶</p>
+    <p class="message">🚗 One day, may your dreams be as fast as a BMW 🚗💨</p>
+    <p class="message">💖 Sending hugs, confetti, and extra smiles your way 💖</p>
+  </div>
+</div>
+
+<button id="startBtn">🐱🎂 Click Me, I’m Shy 🎂🐱</button>
+
+<audio id="bg-music" loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="meow-sound">
+  <source src="https://www.fesliyanstudios.com/play-mp3/6514" type="audio/mpeg">
+</audio>
+
+<script>
+const startBtn = document.getElementById("startBtn");
+const bgMusic = document.getElementById("bg-music");
+const meow = document.getElementById("meow-sound");
+const messages = document.querySelectorAll(".message");
+const card = document.getElementById("card");
+
+const balloons = ["🎈","🎉","🥳","✨","🎂"];
+const confettiShapes = ["💖","⭐","🌸","💫","🎶"];
+const catImgs = [
+  "https://cdn.pixabay.com/photo/2016/02/19/11/53/cat-1201654_1280.png",
+  "https://cdn.pixabay.com/photo/2021/03/23/18/15/cat-6119554_1280.png",
+  "https://cdn.pixabay.com/photo/2017/02/20/18/03/cat-2083492_1280.png",
+  "https://cdn.pixabay.com/photo/2021/07/21/09/24/cat-6482371_1280.png"
+];
+
+const funnyTexts = [
+  "🐱🎂 Click Me, I’m Shy 🎂🐱",
+  "😺 Meow Me Please! 😺",
+  "🚗💨 BMW Turbo Button 🚗💨",
+  "🎉 Unlock the Party 🎉",
+  "🍰 Free Cake Inside 🍰",
+  "🌸 Click for Kawaii 🌸"
+];
+
+setInterval(() => {
+  startBtn.innerText = funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
+}, 3000);
+
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  card.style.transform = "scale(1)";
+  bgMusic.play();
+
+  // Show messages one by one, stop at last
+  let index = 0;
+  messages[index].classList.add("active");
+  const messageInterval = setInterval(() => {
+    messages[index].classList.remove("active");
+    index++;
+    if(index < messages.length){
+      messages[index].classList.add("active");
+    } else {
+      clearInterval(messageInterval); // stop after last message
+    }
+  }, 4000);
+
+  // Add balloons
+  for (let i = 0; i < 20; i++) {
+    let balloon = document.createElement("div");
+    balloon.className = "floating balloon";
+    balloon.innerText = balloons[Math.floor(Math.random()*balloons.length)];
+    balloon.style.left = Math.random() * 100 + "vw";
+    balloon.style.animationDuration = (4 + Math.random()*5) + "s";
+    document.body.appendChild(balloon);
+  }
+
+  // Add confetti
+  for (let i = 0; i < 25; i++) {
+    let conf = document.createElement("div");
+    conf.className = "floating confetti";
+    conf.innerText = confettiShapes[Math.floor(Math.random()*confettiShapes.length)];
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.animationDuration = (3 + Math.random()*3) + "s";
+    conf.style.fontSize = (1 + Math.random()*1.5) + "em";
+    conf.style.top = Math.random() * -50 + "vh";
+    document.body.appendChild(conf);
+  }
+
+  // Add cats
+  for (let i = 0; i < 12; i++) {
+    let cat = document.createElement("img");
+    cat.src = catImgs[Math.floor(Math.random()*catImgs.length)];
+    cat.className = "floating falling-img";
+    cat.style.left = Math.random() * 100 + "vw";
+    cat.style.top = Math.random() * -80 + "vh";
+    cat.style.animationDuration = (4 + Math.random()*3) + "s";
+    cat.style.animationDelay = Math.random() * 5 + "s";
+    cat.style.zIndex = Math.floor(Math.random()*10);
+    cat.style.transform = `scale(${0.7 + Math.random()*0.6})`;
+    document.body.appendChild(cat);
+  }
+
+  // Add BMW logos
+  for (let i = 0; i < 8; i++) {
+    let bmw = document.createElement("img");
+    bmw.src = "https://upload.wikimedia.org/wikipedia/commons/thumb/4/44/BMW.svg/320px-BMW.svg.png";
+    bmw.className = "floating falling-img";
+    bmw.style.left = Math.random() * 100 + "vw";
+    bmw.style.top = Math.random() * -80 + "vh";
+    bmw.style.animationDuration = (5 + Math.random()*4) + "s";
+    bmw.style.animationDelay = Math.random() * 5 + "s";
+    bmw.style.zIndex = Math.floor(Math.random()*10);
+    bmw.style.width = "50px";
+    document.body.appendChild(bmw);
+  }
+
+  // Random meows
+  setInterval(() => {
+    if(Math.random()>0.6){
+      meow.currentTime=0;
+      meow.play();
+    }
+  }, 5000);
+});
+</script>
+
+</body>
+</html>
